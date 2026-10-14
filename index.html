@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07111b">
+<title>Network Evidence Map</title>
+<style>
+:root{--bg:#07111b;--panel:#0e1b29;--edge:#293c4f;--red:#ff313d;--yellow:#ffc72b;--blue:#24a9ff;--ink:#132232;--paper:#eaf1f5;--muted:#a7b8c7}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0,#192a3a,#07111b 65%);color:#f5f7fa;font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#07111bf2;border-bottom:1px solid var(--edge);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;backdrop-filter:blur(10px)}
+.brand{font-size:15px;font-weight:950;letter-spacing:.6px}.brand span{color:#ff4a52}.tag{font-size:10px;color:var(--muted);margin-top:2px}.btn{border:1px solid #40556a;background:#132638;color:#fff;padding:9px 10px;border-radius:9px;font-weight:750;font-size:11px}
+main{max-width:850px;margin:auto;padding:12px}.intro{border:1px solid var(--edge);background:linear-gradient(140deg,#142638,#0c1824);border-radius:14px;padding:15px;margin-bottom:12px}.intro h1{font-size:22px;line-height:1.12;margin:0 0 6px}.intro h1 em{font-style:normal;color:#ff5960}.intro p{font-size:12px;color:#c0ced9;line-height:1.5;margin:0}.notice{font-size:10px;color:#ffdf92;background:#2a2518;border:1px solid #645225;padding:8px 10px;border-radius:8px;margin-top:10px}
+.board{position:relative;overflow:hidden;border:1px solid var(--edge);border-radius:16px;background:linear-gradient(#0d1b29,#07111b);padding:14px 10px 16px}.board:before{content:"";position:absolute;inset:0;background-image:radial-gradient(#597184 1px,transparent 1px);background-size:18px 18px;opacity:.15;pointer-events:none}
+.level{position:relative;z-index:1;text-align:center;margin-bottom:10px}.paper-label{display:inline-block;background:#ead8b7;color:#17202a;padding:8px 12px;border-radius:3px;font-weight:950;font-size:13px;box-shadow:0 3px 0 #9c7a4a}.paper-label small{display:block;font-size:10px;font-weight:650;color:#4a4b4c;margin-top:3px}
+.root{display:block;width:min(100%,310px);margin:0 auto;background:#101f2d;border:1px solid #ff555d;border-radius:12px;padding:13px;color:white;text-decoration:none;box-shadow:0 0 20px #ff293b2b}.root .symbol{font-size:30px}.root b{display:block;font-size:16px}.root small{display:block;color:#b8c8d5;font-size:10px;margin-top:3px}.vline{height:23px;width:2px;background:var(--red);margin:0 auto;position:relative;filter:drop-shadow(0 0 4px var(--red))}.vline:after{content:"";position:absolute;bottom:-1px;left:-4px;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid var(--red)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;position:relative;z-index:1}.tile{position:relative;display:block;min-width:0;text-align:center;background:linear-gradient(150deg,#f4f7f9,#c8d7df);border:1px solid #e9f2f6;border-radius:10px;color:var(--ink);text-decoration:none;padding:12px 7px 10px;box-shadow:0 4px 12px #0005;transition:transform .15s}.tile:active{transform:scale(.98)}.tile .symbol{font-size:27px;display:block;margin-bottom:4px}.tile strong{font-size:11px;line-height:1.25;display:block}.tile small{font-size:9px;line-height:1.35;display:block;color:#506271;margin-top:4px}.plus{position:absolute;right:6px;top:6px;background:#0b1a28;color:#fff;border:1px solid #fff;border-radius:50%;width:20px;height:20px;font-size:15px;line-height:18px;font-weight:900}
+.section-title{position:relative;z-index:1;text-align:center;font-size:10px;letter-spacing:.7px;text-transform:uppercase;color:#c7d4df;font-weight:900;margin:15px 0 9px}.section-title span{color:#ff555d}
+.person-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;position:relative;z-index:1}.person{display:block;background:#dce7ed;color:#142432;border:1px solid #f2f7fa;border-radius:9px;text-decoration:none;text-align:center;padding:10px 4px 9px;min-width:0}.avatar{height:43px;width:43px;margin:0 auto 6px;border-radius:50%;background:linear-gradient(#516879,#152a3a);color:#eef5f8;display:grid;place-items:center;font-size:24px}.person b{display:block;font-size:10px;line-height:1.25}.person small{display:block;color:#536777;font-size:9px;margin-top:4px}
+.lib{position:relative;z-index:1;margin-top:17px;border-top:1px solid var(--edge);padding-top:14px}.lib h2{font-size:15px;margin:0 0 9px}.evidence-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ev{display:block;background:#101f2d;border:1px solid #2b4154;border-radius:9px;padding:11px;color:#fff;text-decoration:none}.ev b{font-size:11px;display:block}.ev small{font-size:9px;color:#a9bbc9;display:block;margin-top:4px}.legend{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:9px;background:#0a1723;border:1px solid var(--edge);border-radius:10px;padding:10px;margin-top:12px;font-size:9px;color:#c6d3dc}.legend span{display:flex;align-items:center;gap:5px}.line{width:19px;height:3px;background:var(--red)}.line.yellow{background:var(--yellow)}.line.blue{background:var(--blue)}.footer{position:relative;z-index:1;font-size:9px;line-height:1.5;text-align:center;color:#8fa4b5;margin:12px 4px 0}
+@media(min-width:600px){main{padding:20px}.board{padding:22px}.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.person-grid{grid-template-columns:repeat(5,minmax(0,1fr))}.evidence-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.intro h1{font-size:28px}}
+</style>
+</head>
+<body>
+<header><div><div class="brand">NETWORK <span>EVIDENCE MAP</span></div><div class="tag">People · organizations · source records</div></div><button class="btn" id="exportBtn">Export data</button></header>
+<main>
+<section class="intro"><h1>Follow the links.<br><em>Check the evidence.</em></h1><p>Tap a card to open a dedicated HTML profile with background, documented connections, statements and source links.</p><div class="notice">A connection is not proof of control or wrongdoing. Each profile should separate documented facts, attributed claims and unresolved allegations.</div></section>
+<section class="board">
+<div class="level"><a class="root" href="profile.html?id=main-network"><span class="symbol">🌐</span><b>Main network</b><small>Central profile · Overview and documented links</small></a><div class="vline"></div></div>
+<div class="grid" id="topGrid">
+<a class="tile" href="profile.html?id=funding-sources"><span class="symbol">💵</span><strong>Funding sources</strong><small>Disclosures and financial records</small><span class="plus">+</span></a>
+<a class="tile" href="profile.html?id=organizations"><span class="symbol">🌐</span><strong>Organizations</strong><small>Documented affiliations</small><span class="plus">+</span></a>
+<a class="tile" href="profile.html?id=support-network"><span class="symbol">👥</span><strong>Support network</strong><small>Publicly reported support</small><span class="plus">+</span></a>
+<a class="tile" href="profile.html?id=statements"><span class="symbol">📄</span><strong>Statements</strong><small>Original posts and records</small><span class="plus">+</span></a>
+</div>
+<div class="section-title">Level 2 · <span>Organizations / core network</span></div><div class="vline"></div>
+<div class="grid" id="orgGrid">
+<a class="tile" href="profile.html?id=organization-a"><span class="symbol">🏛️</span><strong>Organization A</strong><small>Tap to view profile</small><span class="plus">+</span></a>
+<a class="tile" href="profile.html?id=organization-b"><span class="symbol">📣</span><strong>Organization B</strong><small>Tap to view profile</small><span class="plus">+</span></a>
+<a class="tile" href="profile.html?id=organization-c"><span class="symbol">📚</span><strong>Organization C</strong><small>Tap to view profile</small><span class="plus">+</span></a>
+<a class="tile" href="profile.html?id=organization-d"><span class="symbol">⚖️</span><strong>Organization D</strong><small>Tap to view profile</small><span class="plus">+</span></a>
+</div>
+<div class="section-title">Level 3 · <span>Individuals / public figures</span></div><div class="vline"></div>
+<div class="person-grid" id="peopleGrid">
+<a class="person" href="profile.html?id=individual-01"><span class="avatar">●</span><b>Individual 01</b><small>Public role</small></a>
+<a class="person" href="profile.html?id=individual-02"><span class="avatar">●</span><b>Individual 02</b><small>Public role</small></a>
+<a class="person" href="profile.html?id=individual-03"><span class="avatar">●</span><b>Individual 03</b><small>Public role</small></a>
+</div>
+<div class="section-title">Level 4 · <span>Posts / evidence items</span></div><div class="vline"></div>
+<div class="grid">
+<a class="tile" href="profile.html?id=public-statement"><span class="symbol">💬</span><strong>Public statement</strong><small>Link to original source</small></a>
+<a class="tile" href="profile.html?id=video-interview"><span class="symbol">▶️</span><strong>Video / interview</strong><small>Full context preferred</small></a>
+<a class="tile" href="profile.html?id=official-document"><span class="symbol">📑</span><strong>Official document</strong><small>Document date and issuer</small></a>
+<a class="tile" href="profile.html?id=fact-check"><span class="symbol">🔎</span><strong>Fact check</strong><small>Independent assessment</small></a>
+</div>
+<section class="lib"><h2>Evidence library</h2><div class="evidence-grid">
+<a class="ev" href="profile.html?id=statement-record"><b>▤ Statement record</b><small>Open source details</small></a>
+<a class="ev" href="profile.html?id=video-record"><b>▶ Video / interview</b><small>Open source details</small></a>
+<a class="ev" href="profile.html?id=document-record"><b>▣ Official document</b><small>Open source details</small></a>
+<a class="ev" href="profile.html?id=news-record"><b>▧ News report</b><small>Open source details</small></a>
+</div></section>
+<div class="legend"><span><i class="line"></i> Documented direct link</span><span><i class="line yellow"></i> Support / association</span><span><i class="line blue"></i> Influence / promotion</span></div>
+<p class="footer">Template uses generic placeholders. Replace them with source-backed information. Avoid presenting unverified claims as established facts.</p>
+</section></main>
+<script>
+document.getElementById('exportBtn').addEventListener('click',()=>{const rows=[...document.querySelectorAll('a[href*="profile.html?id="]')].map(a=>({title:a.querySelector('strong,b')?.textContent||a.textContent.trim(),url:a.getAttribute('href')}));const blob=new Blob([JSON.stringify(rows,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='network-map-cards.json';a.click();URL.revokeObjectURL(u)});
+</script>
+</body></html>
