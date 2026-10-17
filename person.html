@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Profile · Dimagi Naxal Network</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05070c;
+      --card: linear-gradient(160deg, #121820 0%, #0a0e16 100%);
+      --red: #e10600;
+      --red-bright: #ff1f1f;
+      --text: #eef2f7;
+      --muted: #8b96a8;
+      --border: rgba(192, 200, 212, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(225,6,0,0.15), transparent 55%),
+        linear-gradient(rgba(192,200,212,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(192,200,212,0.018) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 16px 50px;
+    }
+
+    /* Top neon bar */
+    .top {
+      text-align: center;
+      padding: 22px 0 16px;
+    }
+    .top a {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #ff1f1f;
+      text-decoration: none;
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 8px #ff1f1f, 0 0 20px rgba(225,6,0,0.5);
+    }
+
+    /* Profile header */
+    .profile-head {
+      background: var(--card);
+      border: 1px solid rgba(225,6,0,0.35);
+      border-radius: 16px;
+      padding: 28px 20px 24px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px rgba(225,6,0,0.12);
+    }
+
+    .big-avatar {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      background: #1a2230;
+      border: 3px solid rgba(225,6,0,0.5);
+      box-shadow: 0 0 24px rgba(225,6,0,0.3);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .big-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .big-avatar .ph {
+      font-size: 2.6rem;
+      color: #4a5568;
+    }
+
+    .p-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .p-role {
+      font-size: 0.95rem;
+      color: var(--red-bright);
+      font-weight: 600;
+    }
+    .p-cat {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Sections */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 18px;
+      margin-bottom: 14px;
+    }
+
+    .sec-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--red-bright);
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .sec-body {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    /* Timeline */
+    .timeline {
+      list-style: none;
+    }
+    .timeline li {
+      display: flex;
+      gap: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(192,200,212,0.07);
+    }
+    .timeline li:last-child { border-bottom: none; }
+
+    .t-date {
+      font-weight: 700;
+      color: var(--text);
+      min-width: 52px;
+      font-size: 0.88rem;
+      flex-shrink: 0;
+    }
+    .t-text {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Comments */
+    .comment {
+      background: rgba(225,6,0,0.06);
+      border-left: 3px solid var(--red);
+      padding: 12px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 10px;
+    }
+    .comment:last-child { margin-bottom: 0; }
+    .comment .c-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.55;
+      font-style: italic;
+    }
+    .comment .c-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* Media grid */
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .media-item {
+      border-radius: 10px;
+      overflow: hidden;
+      background: #1a2230;
+      border: 1px solid var(--border);
+    }
+    .media-item img {
+      width: 100%;
+      display: block;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+    .media-item .caption {
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 6px 8px;
+    }
+
+    .empty-note {
+      font-size: 0.85rem;
+      color: #6b7585;
+      font-style: italic;
+    }
+
+    .back-bar {
+      text-align: center;
+      margin-top: 24px;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .back-btn:hover {
+      border-color: var(--red);
+      color: var(--text);
+    }
+
+    .not-found {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+    .not-found h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--red-bright);
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="page" id="app">
+    <!-- content filled by JS -->
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    // Get id from URL
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    const person = people.find(p => p.id === id);
+    const app = document.getElementById("app");
+
+    if (!person) {
+      app.innerHTML = `
+        <div class="not-found">
+          <h2>Not Found</h2>
+          <p>No profile with this ID.</p>
+          <div class="back-bar" style="margin-top:24px">
+            <a class="back-btn" href="index.html">← Back to Network</a>
+          </div>
+        </div>`;
+    } else {
+      const cat = categories.find(c => c.id === person.category);
+      const hasPhoto = person.photo && person.photo.trim();
+
+      // History
+      let historyHtml = "";
+      if (person.history && person.history.length) {
+        historyHtml = `<ul class="timeline">${person.history.map(h =>
+          `<li><span class="t-date">${h.date}</span><span class="t-text">${h.text}</span></li>`
+        ).join("")}</ul>`;
+      } else {
+        historyHtml = `<p class="empty-note">No public record added yet.</p>`;
+      }
+
+      // Comments / Hate speech / Statements
+      let commentsHtml = "";
+      if (person.comments && person.comments.length) {
+        commentsHtml = person.comments.map(c => `
+          <div class="comment">
+            <div class="c-text">“${c.text}”</div>
+            <div class="c-meta">${c.date || ""} ${c.source ? "· " + c.source : ""}</div>
+          </div>
+        `).join("");
+      } else {
+        commentsHtml = `<p class="empty-note">No statements or comments added yet. Add them in data.js</p>`;
+      }
+
+      // Media / Pics
+      let mediaHtml = "";
+      if (person.media && person.media.length) {
+        mediaHtml = `<div class="media-grid">${person.media.map(m => {
+          if (m.type === "image" || !m.type) {
+            return `<div class="media-item">
+              <img src="${m.url}" alt="${m.caption || ''}">
+              ${m.caption ? `<div class="caption">${m.caption}</div>` : ""}
+            </div>`;
+          }
+          return "";
+        }).join("")}</div>`;
+      } else {
+        mediaHtml = `<p class="empty-note">No images added yet. Add screenshot URLs in data.js</p>`;
+      }
+
+      app.innerHTML = `
+        <div class="top">
+          <a href="index.html">DIMAGI NAXAL</a>
+        </div>
+
+        <div class="profile-head">
+          <div class="big-avatar">
+            ${hasPhoto ? `<img src="${person.photo}" alt="${person.name}">` : `<div class="ph">👤</div>`}
+          </div>
+          <div class="p-name">${person.name}</div>
+          <div class="p-role">${person.role}</div>
+          <div class="p-cat">${cat ? cat.name : person.category}</div>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">About / Position</div>
+          <div class="sec-body">${person.about || "No description added."}</div>
+        </div>
+
+        <div class="section">
+          <div class="sec-title">Against Development / Public Record</div>
+          ${historyHtml}
+        </div>
+
+        <div class="section">
+          <div class="sec-title">Statements / Comments</div>
+          ${commentsHtml}
+        </div>
+
+        <div class="section">
+          <div class="sec-title">Images / Screenshots</div>
+          ${mediaHtml}
+        </div>
+
+        <div class="back-bar">
+          <a class="back-btn" href="index.html">← Back to Network</a>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
