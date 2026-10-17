@@ -156,29 +156,82 @@
   <div class="footer">Documentation map · Add public sources and evidence links in the data section</div>
 
   <script>
-    // Add each person's Pastebin URL in pastebinUrl. The existing UI is preserved.
+    // Each category has its own JSON file inside /data. Edit those files to add entries.
     const categories = [
-      { id: "youtubers", name: "Youtubers", icon: "▶️", desc: "Online creators & commentary channels" },
-      { id: "media", name: "Media", icon: "📺", desc: "Journalists, anchors & media houses" },
-      { id: "actors", name: "Actors", icon: "🎬", desc: "Film & television personalities" },
-      { id: "advocates", name: "Advocates", icon: "⚖️", desc: "Lawyers & legal activists" },
-      { id: "politicians", name: "Politicians", icon: "🏛️", desc: "Political figures & party voices" },
-      { id: "ngos", name: "NGOs", icon: "🌐", desc: "Non-profits & civil society groups" },
-      { id: "academics", name: "Academics", icon: "📚", desc: "Professors, writers & intellectuals" },
-      { id: "activists", name: "Activists", icon: "📢", desc: "Street & online activists" }
-    ];
+      {
+            "id": "youtubers",
+            "name": "Youtubers",
+            "icon": "▶️",
+            "desc": "Online creators & commentary channels",
+            "file": "youtubers.json"
+      },
+      {
+            "id": "media",
+            "name": "Media",
+            "icon": "📺",
+            "desc": "Journalists, anchors & media houses",
+            "file": "media.json"
+      },
+      {
+            "id": "actors",
+            "name": "Actors",
+            "icon": "🎬",
+            "desc": "Film & television personalities",
+            "file": "actors.json"
+      },
+      {
+            "id": "advocates",
+            "name": "Advocates",
+            "icon": "⚖️",
+            "desc": "Lawyers & legal activists",
+            "file": "advocates.json"
+      },
+      {
+            "id": "politicians",
+            "name": "Politicians",
+            "icon": "🏛️",
+            "desc": "Political figures & party voices",
+            "file": "politicians.json"
+      },
+      {
+            "id": "ngos",
+            "name": "NGOs",
+            "icon": "🌐",
+            "desc": "Non-profits & civil society groups",
+            "file": "ngos.json"
+      },
+      {
+            "id": "academics",
+            "name": "Academics",
+            "icon": "📚",
+            "desc": "Professors, writers & intellectuals",
+            "file": "academics.json"
+      },
+      {
+            "id": "activists",
+            "name": "Activists",
+            "icon": "📢",
+            "desc": "Street & online activists",
+            "file": "activists.json"
+      }
+];
+    let people = [];
 
-    const people = [
-      { id: "yt-001", category: "youtubers", name: "Youtuber Name 1", role: "Content Creator", photo: "", pastebinUrl: "" },
-      { id: "yt-002", category: "youtubers", name: "Youtuber Name 2", role: "Commentator", photo: "", pastebinUrl: "" },
-      { id: "media-001", category: "media", name: "Media Person 1", role: "Journalist", photo: "", pastebinUrl: "" },
-      { id: "actor-001", category: "actors", name: "Actor Name 1", role: "Actor", photo: "", pastebinUrl: "" },
-      { id: "adv-001", category: "advocates", name: "Advocate Name 1", role: "Advocate", photo: "", pastebinUrl: "" },
-      { id: "pol-001", category: "politicians", name: "Politician Name 1", role: "Politician", photo: "", pastebinUrl: "" },
-      { id: "ngo-001", category: "ngos", name: "NGO Name 1", role: "Organisation", photo: "", pastebinUrl: "" },
-      { id: "acad-001", category: "academics", name: "Academic Name 1", role: "Professor", photo: "", pastebinUrl: "" },
-      { id: "act-001", category: "activists", name: "Activist Name 1", role: "Activist", photo: "", pastebinUrl: "" }
-    ];
+    async function loadPeople() {
+      const results = await Promise.all(categories.map(async cat => {
+        try {
+          const response = await fetch(`data/${cat.file}`);
+          if (!response.ok) throw new Error(`Could not load ${cat.file}`);
+          const rows = await response.json();
+          return rows.map(person => ({ ...person, category: cat.id }));
+        } catch (error) {
+          console.error(error);
+          return [];
+        }
+      }));
+      people = results.flat();
+      renderCategories();
+    }
 
     function count(catId) {
       return people.filter(p => p.category === catId).length;
@@ -225,7 +278,7 @@
         grid.querySelectorAll('[data-no-link="true"]').forEach(card => {
           card.addEventListener("click", event => {
             event.preventDefault();
-            alert('Paste a URL into this person’s pastebinUrl field in index.html first.');
+            alert('Add this person’s Pastebin URL in the matching JSON file inside the data folder first.');
           });
         });
       }
@@ -241,7 +294,7 @@
       window.scrollTo(0, 0);
     }
 
-    renderCategories();
+    loadPeople();
   </script>
 </body>
 </html>
