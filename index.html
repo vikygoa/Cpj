@@ -13,7 +13,6 @@
       --card: linear-gradient(160deg, #121820 0%, #0a0e16 100%);
       --red: #e10600;
       --red-bright: #ff1f1f;
-      --red-glow: rgba(225, 6, 0, 0.55);
       --text: #eef2f7;
       --muted: #8b96a8;
       --border: rgba(192, 200, 212, 0.12);
@@ -29,7 +28,6 @@
       line-height: 1.5;
     }
 
-    /* subtle grid + red glow */
     body::before {
       content: '';
       position: fixed;
@@ -51,7 +49,7 @@
       padding: 0 16px 60px;
     }
 
-    /* ===== NEON TITLE ONLY ===== */
+    /* NEON TITLE */
     .neon-header {
       text-align: center;
       padding: 36px 0 28px;
@@ -78,12 +76,12 @@
       letter-spacing: 0.6px;
     }
 
-    /* ===== INTRO ===== */
+    /* INTRO */
     .intro {
       background: var(--card);
       border: 1px solid rgba(225,6,0,0.3);
       border-radius: 14px;
-      padding: 18px 18px;
+      padding: 18px;
       margin-bottom: 28px;
       box-shadow: 0 0 28px rgba(225,6,0,0.12);
     }
@@ -93,7 +91,7 @@
       line-height: 1.6;
     }
 
-    /* ===== CATEGORY GRID ===== */
+    /* CATEGORIES */
     .section-label {
       font-size: 0.72rem;
       font-weight: 700;
@@ -119,9 +117,7 @@
       transition: all 0.22s ease;
       box-shadow: 0 4px 16px rgba(0,0,0,0.35);
     }
-    .cat-card:active {
-      transform: scale(0.97);
-    }
+    .cat-card:active { transform: scale(0.97); }
     .cat-card:hover {
       border-color: rgba(225,6,0,0.55);
       box-shadow: 0 0 22px rgba(225,6,0,0.22);
@@ -151,7 +147,7 @@
       margin-top: 4px;
     }
 
-    /* ===== CATEGORY DETAIL ===== */
+    /* VIEWS */
     .view { display: none; }
     .view.active { display: block; }
 
@@ -185,7 +181,7 @@
       margin-bottom: 22px;
     }
 
-    /* Person cards - only pic + name */
+    /* PERSON CARDS */
     .person-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -269,7 +265,7 @@
 <body>
   <div class="wrap">
 
-    <!-- NEON TITLE ONLY -->
+    <!-- NEON TITLE -->
     <div class="neon-header">
       <div class="neon-title">DIMAGI NAXAL</div>
       <div class="neon-sub">Network Map</div>
@@ -302,14 +298,116 @@
     Documentation map · Add verified names & public record on GitHub
   </div>
 
-  <script src="data.js"></script>
   <script>
+    // ===================== DATA (embedded so it always works) =====================
+    const categories = [
+      { id: "youtubers",   name: "Youtubers",    icon: "▶️", desc: "Online creators & commentary channels" },
+      { id: "media",       name: "Media",        icon: "📺", desc: "Journalists, anchors & media houses" },
+      { id: "actors",      name: "Actors",       icon: "🎬", desc: "Film & television personalities" },
+      { id: "advocates",   name: "Advocates",    icon: "⚖️", desc: "Lawyers & legal activists" },
+      { id: "politicians", name: "Politicians",  icon: "🏛️", desc: "Political figures & party voices" },
+      { id: "ngos",        name: "NGOs",         icon: "🌐", desc: "Non-profits & civil society groups" },
+      { id: "academics",   name: "Academics",    icon: "📚", desc: "Professors, writers & intellectuals" },
+      { id: "activists",   name: "Activists",    icon: "📢", desc: "Street & online activists" }
+    ];
+
+    const people = [
+      {
+        id: "yt-001",
+        category: "youtubers",
+        name: "Youtuber Name 1",
+        role: "Content Creator",
+        photo: "",
+        about: "Placeholder. Add short description of their public stance.",
+        history: [
+          { date: "2025", text: "Placeholder: Opposed X development project" },
+          { date: "2024", text: "Placeholder: Campaign against Y policy" }
+        ]
+      },
+      {
+        id: "yt-002",
+        category: "youtubers",
+        name: "Youtuber Name 2",
+        role: "Commentator",
+        photo: "",
+        about: "Placeholder bio.",
+        history: [
+          { date: "2026", text: "Placeholder public statement" }
+        ]
+      },
+      {
+        id: "media-001",
+        category: "media",
+        name: "Media Person 1",
+        role: "Journalist",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2025", text: "Placeholder record" }]
+      },
+      {
+        id: "actor-001",
+        category: "actors",
+        name: "Actor Name 1",
+        role: "Actor",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2024", text: "Placeholder statement" }]
+      },
+      {
+        id: "adv-001",
+        category: "advocates",
+        name: "Advocate Name 1",
+        role: "Advocate",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2025", text: "Placeholder case / statement" }]
+      },
+      {
+        id: "pol-001",
+        category: "politicians",
+        name: "Politician Name 1",
+        role: "Politician",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2026", text: "Placeholder opposition to project" }]
+      },
+      {
+        id: "ngo-001",
+        category: "ngos",
+        name: "NGO Name 1",
+        role: "Organisation",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2023", text: "Placeholder campaign" }]
+      },
+      {
+        id: "acad-001",
+        category: "academics",
+        name: "Academic Name 1",
+        role: "Professor",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2025", text: "Placeholder article / speech" }]
+      },
+      {
+        id: "act-001",
+        category: "activists",
+        name: "Activist Name 1",
+        role: "Activist",
+        photo: "",
+        about: "Placeholder.",
+        history: [{ date: "2026", text: "Placeholder protest / post" }]
+      }
+    ];
+
+    // ===================== RENDER =====================
     function count(catId) {
       return people.filter(p => p.category === catId).length;
     }
 
     function renderCategories() {
-      document.getElementById("cat-grid").innerHTML = categories.map(c => `
+      const grid = document.getElementById("cat-grid");
+      grid.innerHTML = categories.map(c => `
         <div class="cat-card" onclick="openCat('${c.id}')">
           <div class="cat-icon">${c.icon}</div>
           <div class="cat-name">${c.name}</div>
@@ -329,7 +427,7 @@
       const grid = document.getElementById("person-grid");
 
       if (!list.length) {
-        grid.innerHTML = `<div class="empty"><strong>No entries yet</strong>Add names in data.js on GitHub</div>`;
+        grid.innerHTML = `<div class="empty"><strong>No entries yet</strong>Add names in the data section</div>`;
       } else {
         grid.innerHTML = list.map(p => {
           const img = p.photo && p.photo.trim()
@@ -355,6 +453,7 @@
       window.scrollTo(0, 0);
     }
 
+    // Run immediately
     renderCategories();
   </script>
 </body>
