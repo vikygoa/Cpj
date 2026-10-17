@@ -1,460 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Dimagi Naxal Network</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080a10">
+  <title>DIMAGI NAXAL — Public Record Directory</title>
   <style>
-    :root {
-      --bg: #05070c;
-      --card: linear-gradient(160deg, #121820 0%, #0a0e16 100%);
-      --red: #e10600;
-      --red-bright: #ff1f1f;
-      --text: #eef2f7;
-      --muted: #8b96a8;
-      --border: rgba(192, 200, 212, 0.12);
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-      line-height: 1.5;
-    }
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 90% 50% at 50% -10%, rgba(225,6,0,0.18), transparent 60%),
-        linear-gradient(rgba(192,200,212,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(192,200,212,0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 48px 48px, 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 0 16px 60px;
-    }
-
-    /* NEON TITLE */
-    .neon-header {
-      text-align: center;
-      padding: 36px 0 28px;
-    }
-
-    .neon-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.85rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      color: #ff1f1f;
-      text-shadow:
-        0 0 7px #ff1f1f,
-        0 0 18px #e10600,
-        0 0 40px rgba(225, 6, 0, 0.6),
-        0 0 80px rgba(225, 6, 0, 0.3);
-      line-height: 1.2;
-    }
-
-    .neon-sub {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 8px;
-      letter-spacing: 0.6px;
-    }
-
-    /* INTRO */
-    .intro {
-      background: var(--card);
-      border: 1px solid rgba(225,6,0,0.3);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 28px;
-      box-shadow: 0 0 28px rgba(225,6,0,0.12);
-    }
-    .intro p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    /* CATEGORIES */
-    .section-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: var(--red-bright);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }
-
-    .cat-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .cat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px 12px 16px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.22s ease;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
-    }
-    .cat-card:active { transform: scale(0.97); }
-    .cat-card:hover {
-      border-color: rgba(225,6,0,0.55);
-      box-shadow: 0 0 22px rgba(225,6,0,0.22);
-    }
-
-    .cat-icon {
-      width: 46px;
-      height: 46px;
-      margin: 0 auto 10px;
-      background: rgba(225,6,0,0.1);
-      border: 1px solid rgba(225,6,0,0.25);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.35rem;
-    }
-
-    .cat-name {
-      font-weight: 700;
-      font-size: 0.92rem;
-      color: var(--text);
-    }
-    .cat-count {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* VIEWS */
-    .view { display: none; }
-    .view.active { display: block; }
-
-    .back {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 8px 0 20px;
-      font-family: inherit;
-    }
-    .back:hover { border-color: var(--red); color: var(--text); }
-
-    .detail-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .detail-desc {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
-
-    /* PERSON CARDS */
-    .person-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .person-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 18px 10px 14px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-    .person-card:hover {
-      border-color: rgba(225,6,0,0.5);
-      box-shadow: 0 0 20px rgba(225,6,0,0.18);
-    }
-
-    .avatar {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 12px;
-      border-radius: 50%;
-      background: #1a2230;
-      border: 2px solid rgba(225,6,0,0.35);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .avatar .ph {
-      font-size: 1.6rem;
-      color: #4a5568;
-    }
-
-    .p-name {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .p-role {
-      font-size: 0.72rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 40px 16px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .empty strong {
-      display: block;
-      color: var(--red-bright);
-      margin-bottom: 6px;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 32px 16px 20px;
-      font-size: 0.75rem;
-      color: #5a6575;
-    }
+    :root{color-scheme:dark;--bg:#07090f;--panel:#111620;--line:#292f3c;--red:#ff354d;--cyan:#49d8ff;--text:#f4f6fb;--muted:#a5adbd}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#1b0c16 0,#080a10 45%,#05060a 100%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header{text-align:center;padding:28px 16px 18px;border-bottom:1px solid #391721;background:#090b12d9;position:sticky;top:0;z-index:2;backdrop-filter:blur(12px)}
+    h1{margin:0;color:var(--red);font-size:clamp(22px,5vw,32px);letter-spacing:.12em;text-shadow:0 0 20px #ff354d55}
+    .sub{color:var(--muted);margin:5px 0 0;font-size:13px}
+    main{max-width:1000px;margin:0 auto;padding:20px 14px 60px}
+    .notice{border:1px solid #343a49;border-radius:14px;padding:12px 14px;color:#c8cfdd;background:#10141d;margin-bottom:20px;font-size:13px}
+    .search{width:100%;padding:14px 15px;border:1px solid #343b4a;border-radius:12px;background:#0d1119;color:var(--text);font:inherit;outline:none;margin-bottom:24px}
+    .search:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #49d8ff20}
+    .category{margin:28px 0}.category h2{color:var(--cyan);font-size:17px;letter-spacing:.08em;margin:0 0 12px;text-transform:uppercase}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px}
+    .person{display:block;padding:18px 16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#121722,#0c1017);text-decoration:none;color:inherit;min-height:100px;transition:transform .15s,border-color .15s,box-shadow .15s}
+    .person:hover,.person:focus-visible{transform:translateY(-2px);border-color:var(--red);box-shadow:0 0 22px #ff354d18;outline:none}
+    .person h3{margin:0 0 5px;font-size:18px;overflow-wrap:anywhere}.person .role{color:var(--red);font-weight:650;font-size:13px;margin:0 0 7px}.person .summary{color:var(--muted);font-size:13px;margin:0}
+    .hint{color:#8c96a9;font-size:12px;margin-top:10px}.empty{color:var(--muted);padding:20px;text-align:center}
+    footer{text-align:center;color:#747e91;padding:25px 12px;border-top:1px solid #1e2430;font-size:12px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-
-    <!-- NEON TITLE -->
-    <div class="neon-header">
-      <div class="neon-title">DIMAGI NAXAL</div>
-      <div class="neon-sub">Network Map</div>
-    </div>
-
-    <!-- HOME -->
-    <div id="home" class="view active">
-      <div class="intro">
-        <p>
-          Individuals and groups who consistently oppose national development projects, 
-          infrastructure and reforms. Organised by category for clear documentation.
-        </p>
-      </div>
-
-      <div class="section-label">Categories</div>
-      <div class="cat-grid" id="cat-grid"></div>
-    </div>
-
-    <!-- CATEGORY PAGE -->
-    <div id="category" class="view">
-      <button class="back" onclick="showHome()">← Back</button>
-      <div class="detail-title" id="cat-title">Category</div>
-      <div class="detail-desc" id="cat-desc"></div>
-      <div class="person-grid" id="person-grid"></div>
-    </div>
-
-  </div>
-
-  <div class="footer">
-    Documentation map · Add verified names & public record on GitHub
-  </div>
-
+  <header>
+    <h1>DIMAGI NAXAL</h1>
+    <p class="sub">Public statements, commentary and source documentation</p>
+  </header>
+  <main>
+    <div class="notice">📚 Research directory: review original sources and context. Distinguish verified facts, allegations and opinions; political criticism alone does not establish wrongdoing.</div>
+    <input id="search" class="search" type="search" placeholder="Search names or categories…" aria-label="Search names or categories">
+    <div id="directory"></div>
+  </main>
+  <footer>Keep entries factual, sourced, and respectful of privacy.</footer>
+  <script src="data.js"></script>
   <script>
-    // ===================== DATA (embedded so it always works) =====================
-    const categories = [
-      { id: "youtubers",   name: "Youtubers",    icon: "▶️", desc: "Online creators & commentary channels" },
-      { id: "media",       name: "Media",        icon: "📺", desc: "Journalists, anchors & media houses" },
-      { id: "actors",      name: "Actors",       icon: "🎬", desc: "Film & television personalities" },
-      { id: "advocates",   name: "Advocates",    icon: "⚖️", desc: "Lawyers & legal activists" },
-      { id: "politicians", name: "Politicians",  icon: "🏛️", desc: "Political figures & party voices" },
-      { id: "ngos",        name: "NGOs",         icon: "🌐", desc: "Non-profits & civil society groups" },
-      { id: "academics",   name: "Academics",    icon: "📚", desc: "Professors, writers & intellectuals" },
-      { id: "activists",   name: "Activists",    icon: "📢", desc: "Street & online activists" }
-    ];
-
-    const people = [
-      {
-        id: "yt-001",
-        category: "youtubers",
-        name: "Youtuber Name 1",
-        role: "Content Creator",
-        photo: "",
-        about: "Placeholder. Add short description of their public stance.",
-        history: [
-          { date: "2025", text: "Placeholder: Opposed X development project" },
-          { date: "2024", text: "Placeholder: Campaign against Y policy" }
-        ]
-      },
-      {
-        id: "yt-002",
-        category: "youtubers",
-        name: "Youtuber Name 2",
-        role: "Commentator",
-        photo: "",
-        about: "Placeholder bio.",
-        history: [
-          { date: "2026", text: "Placeholder public statement" }
-        ]
-      },
-      {
-        id: "media-001",
-        category: "media",
-        name: "Media Person 1",
-        role: "Journalist",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2025", text: "Placeholder record" }]
-      },
-      {
-        id: "actor-001",
-        category: "actors",
-        name: "Actor Name 1",
-        role: "Actor",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2024", text: "Placeholder statement" }]
-      },
-      {
-        id: "adv-001",
-        category: "advocates",
-        name: "Advocate Name 1",
-        role: "Advocate",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2025", text: "Placeholder case / statement" }]
-      },
-      {
-        id: "pol-001",
-        category: "politicians",
-        name: "Politician Name 1",
-        role: "Politician",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2026", text: "Placeholder opposition to project" }]
-      },
-      {
-        id: "ngo-001",
-        category: "ngos",
-        name: "NGO Name 1",
-        role: "Organisation",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2023", text: "Placeholder campaign" }]
-      },
-      {
-        id: "acad-001",
-        category: "academics",
-        name: "Academic Name 1",
-        role: "Professor",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2025", text: "Placeholder article / speech" }]
-      },
-      {
-        id: "act-001",
-        category: "activists",
-        name: "Activist Name 1",
-        role: "Activist",
-        photo: "",
-        about: "Placeholder.",
-        history: [{ date: "2026", text: "Placeholder protest / post" }]
-      }
-    ];
-
-    // ===================== RENDER =====================
-    function count(catId) {
-      return people.filter(p => p.category === catId).length;
+    // data.js defines window.SITE_DATA. No build tools or server-side code required.
+    const directory = document.getElementById('directory');
+    const search = document.getElementById('search');
+    let records = [];
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
     }
-
-    function renderCategories() {
-      const grid = document.getElementById("cat-grid");
-      grid.innerHTML = categories.map(c => `
-        <div class="cat-card" onclick="openCat('${c.id}')">
-          <div class="cat-icon">${c.icon}</div>
-          <div class="cat-name">${c.name}</div>
-          <div class="cat-count">${count(c.id)} listed</div>
-        </div>
-      `).join("");
-    }
-
-    function openCat(id) {
-      const cat = categories.find(c => c.id === id);
-      if (!cat) return;
-
-      document.getElementById("cat-title").textContent = cat.name;
-      document.getElementById("cat-desc").textContent = cat.desc;
-
-      const list = people.filter(p => p.category === id);
-      const grid = document.getElementById("person-grid");
-
-      if (!list.length) {
-        grid.innerHTML = `<div class="empty"><strong>No entries yet</strong>Add names in the data section</div>`;
-      } else {
-        grid.innerHTML = list.map(p => {
-          const img = p.photo && p.photo.trim()
-            ? `<img src="${p.photo}" alt="${p.name}">`
-            : `<div class="ph">👤</div>`;
-          return `
-            <a class="person-card" href="person.html?id=${p.id}">
-              <div class="avatar">${img}</div>
-              <div class="p-name">${p.name}</div>
-              <div class="p-role">${p.role}</div>
+    function render() {
+      const term = search.value.trim().toLowerCase();
+      const categories = records.map(cat => ({...cat, people:(cat.people||[]).filter(p =>
+        [p.name,p.role,p.summary,cat.name].some(v => String(v||'').toLowerCase().includes(term))
+      )})).filter(cat => cat.people.length);
+      if (!categories.length) { directory.innerHTML = '<p class="empty">No matching names found.</p>'; return; }
+      directory.innerHTML = categories.map(cat => `
+        <section class="category">
+          <h2>${esc(cat.name)}</h2>
+          <div class="cards">${cat.people.map(person => {
+            const url = String(person.pastebinUrl || '').trim();
+            const href = url || '#';
+            const hint = url ? '↗ Open evidence on Pastebin' : 'Add a Pastebin URL in data.js';
+            return `<a class="person" href="${esc(href)}" ${url ? 'target="_blank" rel="noopener noreferrer"' : 'data-unlinked="true"'} data-name="${esc(person.name)}">
+              <h3>${esc(person.name)} ${url ? '↗' : ''}</h3>
+              <p class="role">${esc(person.role || cat.name)}</p>
+              <p class="summary">${esc(person.summary || 'Add a short, sourced description.')}</p>
+              <p class="hint">${esc(hint)}</p>
             </a>`;
-        }).join("");
-      }
-
-      document.getElementById("home").classList.remove("active");
-      document.getElementById("category").classList.add("active");
-      window.scrollTo(0, 0);
+          }).join('')}</div>
+        </section>`).join('');
+      directory.querySelectorAll('[data-unlinked="true"]').forEach(link => link.addEventListener('click', e => {
+        e.preventDefault();
+        alert('Paste your Pastebin URL into this person’s "pastebinUrl" field in data.js first.');
+      }));
     }
-
-    function showHome() {
-      document.getElementById("category").classList.remove("active");
-      document.getElementById("home").classList.add("active");
-      window.scrollTo(0, 0);
+    try {
+      records = (window.SITE_DATA && window.SITE_DATA.categories) || [];
+      render();
+    } catch (error) {
+      directory.innerHTML = '<p class="empty">Could not load data.js. Check that data.js is committed beside index.html.</p>';
     }
-
-    // Run immediately
-    renderCategories();
+    search.addEventListener('input', render);
   </script>
 </body>
 </html>
