@@ -1,0 +1,50 @@
+[
+  {
+    "id": "yt-001",
+    "name": "YouTuber Name 1",
+    "role": "Content Creator",
+    "photo": "",
+    "pastebinUrl": "",
+    "summary": "Add a neutral, sourced summary of this person's public work."
+  },
+  {
+    "id": "yt-002",
+    "name": "YouTuber Name 2",
+    "role": "Content Creator",
+    "photo": "",
+    "pastebinUrl": "",
+    "summary": "Add a neutral, sourced summary of this person's public work."
+  },
+  {
+    "id": "yt-003",
+    "name": "YouTuber Name 3",
+    "role": "Content Creator",
+    "photo": "",
+    "pastebinUrl": "",
+    "summary": "Add a neutral, sourced summary of this person's public work."
+  },
+  {
+    "id": "yt-004",
+    "name": "YouTuber Name 4",
+    "role": "Content Creator",
+    "photo": "",
+    "pastebinUrl": "",
+    "summary": "Add a neutral, sourced summary of this person's public work."
+  },
+  {
+    "id": "yt-005",
+    "name": "YouTuber Name 5",
+    "role": "Content Creator",
+    "photo": "",
+    "pastebinUrl": "",
+    "summary": "Add a neutral, sourced summary of this person's public work."
+  },
+  {
+    "id": "yt-006",
+    "name": "YouTuber Name 6",
+    "role": "Content Creator",
+    "photo": "",
+    "pastebinUrl": "",
+    "summary": "Add a neutral, sourced summary of this person's public work."
+  }
+]
