@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Dimagi Naxal Network</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #05070c;
+      --card: linear-gradient(160deg, #121820 0%, #0a0e16 100%);
+      --red: #e10600;
+      --red-bright: #ff1f1f;
+      --red-glow: rgba(225, 6, 0, 0.55);
+      --text: #eef2f7;
+      --muted: #8b96a8;
+      --border: rgba(192, 200, 212, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* subtle grid + red glow */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 90% 50% at 50% -10%, rgba(225,6,0,0.18), transparent 60%),
+        linear-gradient(rgba(192,200,212,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(192,200,212,0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ===== NEON TITLE ONLY ===== */
+    .neon-header {
+      text-align: center;
+      padding: 36px 0 28px;
+    }
+
+    .neon-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #ff1f1f;
+      text-shadow:
+        0 0 7px #ff1f1f,
+        0 0 18px #e10600,
+        0 0 40px rgba(225, 6, 0, 0.6),
+        0 0 80px rgba(225, 6, 0, 0.3);
+      line-height: 1.2;
+    }
+
+    .neon-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 8px;
+      letter-spacing: 0.6px;
+    }
+
+    /* ===== INTRO ===== */
+    .intro {
+      background: var(--card);
+      border: 1px solid rgba(225,6,0,0.3);
+      border-radius: 14px;
+      padding: 18px 18px;
+      margin-bottom: 28px;
+      box-shadow: 0 0 28px rgba(225,6,0,0.12);
+    }
+    .intro p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ===== CATEGORY GRID ===== */
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--red-bright);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .cat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 12px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    }
+    .cat-card:active {
+      transform: scale(0.97);
+    }
+    .cat-card:hover {
+      border-color: rgba(225,6,0,0.55);
+      box-shadow: 0 0 22px rgba(225,6,0,0.22);
+    }
+
+    .cat-icon {
+      width: 46px;
+      height: 46px;
+      margin: 0 auto 10px;
+      background: rgba(225,6,0,0.1);
+      border: 1px solid rgba(225,6,0,0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+    }
+
+    .cat-name {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--text);
+    }
+    .cat-count {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ===== CATEGORY DETAIL ===== */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px 0 20px;
+      font-family: inherit;
+    }
+    .back:hover { border-color: var(--red); color: var(--text); }
+
+    .detail-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .detail-desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    /* Person cards - only pic + name */
+    .person-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .person-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px 10px 14px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .person-card:hover {
+      border-color: rgba(225,6,0,0.5);
+      box-shadow: 0 0 20px rgba(225,6,0,0.18);
+    }
+
+    .avatar {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      background: #1a2230;
+      border: 2px solid rgba(225,6,0,0.35);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .avatar .ph {
+      font-size: 1.6rem;
+      color: #4a5568;
+    }
+
+    .p-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .p-role {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .empty strong {
+      display: block;
+      color: var(--red-bright);
+      margin-bottom: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 32px 16px 20px;
+      font-size: 0.75rem;
+      color: #5a6575;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- NEON TITLE ONLY -->
+    <div class="neon-header">
+      <div class="neon-title">DIMAGI NAXAL</div>
+      <div class="neon-sub">Network Map</div>
+    </div>
+
+    <!-- HOME -->
+    <div id="home" class="view active">
+      <div class="intro">
+        <p>
+          Individuals and groups who consistently oppose national development projects, 
+          infrastructure and reforms. Organised by category for clear documentation.
+        </p>
+      </div>
+
+      <div class="section-label">Categories</div>
+      <div class="cat-grid" id="cat-grid"></div>
+    </div>
+
+    <!-- CATEGORY PAGE -->
+    <div id="category" class="view">
+      <button class="back" onclick="showHome()">← Back</button>
+      <div class="detail-title" id="cat-title">Category</div>
+      <div class="detail-desc" id="cat-desc"></div>
+      <div class="person-grid" id="person-grid"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Documentation map · Add verified names & public record on GitHub
+  </div>
+
+  <script src="data.js"></script>
+  <script>
+    function count(catId) {
+      return people.filter(p => p.category === catId).length;
+    }
+
+    function renderCategories() {
+      document.getElementById("cat-grid").innerHTML = categories.map(c => `
+        <div class="cat-card" onclick="openCat('${c.id}')">
+          <div class="cat-icon">${c.icon}</div>
+          <div class="cat-name">${c.name}</div>
+          <div class="cat-count">${count(c.id)} listed</div>
+        </div>
+      `).join("");
+    }
+
+    function openCat(id) {
+      const cat = categories.find(c => c.id === id);
+      if (!cat) return;
+
+      document.getElementById("cat-title").textContent = cat.name;
+      document.getElementById("cat-desc").textContent = cat.desc;
+
+      const list = people.filter(p => p.category === id);
+      const grid = document.getElementById("person-grid");
+
+      if (!list.length) {
+        grid.innerHTML = `<div class="empty"><strong>No entries yet</strong>Add names in data.js on GitHub</div>`;
+      } else {
+        grid.innerHTML = list.map(p => {
+          const img = p.photo && p.photo.trim()
+            ? `<img src="${p.photo}" alt="${p.name}">`
+            : `<div class="ph">👤</div>`;
+          return `
+            <a class="person-card" href="person.html?id=${p.id}">
+              <div class="avatar">${img}</div>
+              <div class="p-name">${p.name}</div>
+              <div class="p-role">${p.role}</div>
+            </a>`;
+        }).join("");
+      }
+
+      document.getElementById("home").classList.remove("active");
+      document.getElementById("category").classList.add("active");
+      window.scrollTo(0, 0);
+    }
+
+    function showHome() {
+      document.getElementById("category").classList.remove("active");
+      document.getElementById("home").classList.add("active");
+      window.scrollTo(0, 0);
+    }
+
+    renderCategories();
+  </script>
+</body>
+</html>
